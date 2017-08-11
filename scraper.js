@@ -22,9 +22,7 @@ scrapePage(mainPage);
 loopThroughPages(mainPage, function(result) {
     var numOfPages = +(result[0]);
     for (var pageNum = 2; pageNum <= numOfPages; pageNum++) {
-        return new Promise(function (resolve, reject) {
             scrapePage(mainPage + '/page/' + pageNum, pageNum);
-        })
 
     }
 });
@@ -42,7 +40,8 @@ function scrapePage(url, pageNum) {
             if (err) console.log(err.red);
             if (result) {
                     result.forEach((url) => {
-                        download(url, pageNum)
+                            download(url, pageNum)
+
                     })
                 }
 
@@ -75,7 +74,8 @@ function download(url, pageNum) {
         http.get(result,(response) => {
             if (response.statusCode === 200){
                 var file = fs.createWriteStream("books/" + category + "/" + url.split('/')[3] + ".pdf");
-                if (!fs.existsSync(file)) {
+                if (!fs.existsSync(file.path)) {
+
                     console.log('downloading ' .blue + url .cyan, 'pageNum ' .red + pageNum);
                     response.pipe(file);
                 }else{
