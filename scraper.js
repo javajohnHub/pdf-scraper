@@ -3,9 +3,8 @@ var x = Xray();
 var http = require('http');
 var fs = require('fs');
 var colors = require('colors');
-var async = require("async");
 var path = require('path');
-var Promise = require('bluebird');
+
 
 const argv = require('yargs')
 .option('category', {
@@ -60,7 +59,6 @@ function download(url, pageNum) {
     x(url, '.download-links>a@href')((err, result) => {
 
         if (err) console.log(err.code .red);
-        return new Promise((resolve, reject) => {
         http.get(result,(response) => {
             if (response.statusCode === 200) {
                 var file = fs.createWriteStream("books/" + category + "/" + url.split('/')[3] + ".pdf");
@@ -90,6 +88,6 @@ function download(url, pageNum) {
             }
 
         });
-        })
+
     });
 }

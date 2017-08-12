@@ -1,0 +1,24 @@
+{
+  "name": "pdf-scraper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "scraper.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/javajohnHub/pdf-scraper.git"
+  },
+  "author": "John Edwards <joedw1978@gmail.com> (https://419webdev.site)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/javajohnHub/pdf-scraper/issues"
+  },
+  "homepage": "https://github.com/javajohnHub/pdf-scraper#readme",
+  "dependencies": {
+    "colors": "^1.1.2",
+    "x-ray": "^2.3.2",
+    "yargs": "^8.0.2"
+  }
+}
