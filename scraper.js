@@ -7,12 +7,12 @@ var path = require('path');
 
 
 const argv = require('yargs')
-.option('category', {
-    alias: 'c',
-    demand: true,
-    describe: 'Book Category',
-    type: 'string'
-}).help('help').argv
+    .option('category', {
+        alias: 'c',
+        demand: true,
+        describe: 'Book Category',
+        type: 'string'
+    }).help('help').argv
 
 var category = argv.c.split(' ').join('-');
 var mainPage = 'http://www.allitebooks.com/' + category;
@@ -22,30 +22,27 @@ loopThroughPages(mainPage, function(result) {
     var numOfPages = +(result[0]);
     for (var pageNum = 2; pageNum <= numOfPages; pageNum++) {
 
-            scrapePage(mainPage + '/page/' + pageNum, pageNum);
+        scrapePage(mainPage + '/page/' + pageNum, pageNum);
 
     }
 });
 
 function loopThroughPages(url, callback) {
     x(url, ['a[title="Last Page →"]'])((err, result) => {
-        if (err) console.log(err .red);
-        console.log('Result: ' .cyan, result);
+        if (err) console.log(err.red);
+        console.log('Result: '.cyan, result);
         callback(result);
     })
 }
 
 function scrapePage(url, pageNum) {
-         x(url, ['.entry-title>a@href'])((err, result) => {
-            if (err) console.log(err);
-            if (result) {
-                    result.forEach( url => {
-                      download(url, pageNum)
-
-                    })
-                }
-
-
+    x(url, ['.entry-title>a@href'])((err, result) => {
+        if (err) console.log(err);
+        if (result) {
+            result.forEach(url => {
+                download(url, pageNum)
+            })
+        }
     })
 }
 
@@ -58,30 +55,30 @@ function download(url, pageNum) {
     }
     x(url, '.download-links>a@href')((err, result) => {
 
-        if (err) console.log(err.code .red);
-        http.get(result,(response) => {
+        if (err) console.log(err.code.red);
+        http.get(result, (response) => {
             if (response.statusCode === 200) {
                 var file = fs.createWriteStream("books/" + category + "/" + url.split('/')[3] + ".pdf");
                 if (!fs.existsSync(file.path)) {
-                    if(pageNum !== undefined || pageNum !== 'undefined'){
-                        console.log('downloading '.blue, url, ' PAGENUM ' .red, pageNum.toString() .blue )
-                    }else{
+                    if (pageNum !== undefined || pageNum !== 'undefined') {
+                        console.log('downloading '.blue, url, ' PAGENUM '.red, pageNum)
+                    } else {
                         console.log('downloading '.blue, url)
                     }
 
                     response.pipe(file);
                 } else {
-                    console.log('File exists' .cyan);
+                    console.log('File exists'.cyan);
                 }
             }
 
-        }).on('error', function(err){
-            console.log(err.code .red);
-            if(err.code === 'ETIMEDOUT' || err.code === 'ECONNREFUSED'){
-                download(url, pageNum )
-                if(pageNum !== undefined || pageNum !== 'undefined'){
-                    console.log('retrying '.magenta, url, ' PAGENUM ' .red, pageNum.toString() .blue )
-                }else{
+        }).on('error', function(err) {
+            console.log(err.code.red);
+            if (err.code === 'ETIMEDOUT' || err.code === 'ECONNREFUSED') {
+                download(url, pageNum)
+                if (pageNum !== undefined || pageNum !== 'undefined') {
+                    console.log('retrying '.magenta, url, ' PAGENUM '.red, pageNum.toString().blue)
+                } else {
                     console.log('retrying '.magenta, url)
                 }
 
