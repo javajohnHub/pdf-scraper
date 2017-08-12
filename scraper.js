@@ -22,6 +22,7 @@ scrapePage(mainPage);
 loopThroughPages(mainPage, function(result) {
     var numOfPages = +(result[0]);
     for (var pageNum = 2; pageNum <= numOfPages; pageNum++) {
+
             scrapePage(mainPage + '/page/' + pageNum, pageNum);
 
     }
@@ -30,17 +31,17 @@ loopThroughPages(mainPage, function(result) {
 function loopThroughPages(url, callback) {
     x(url, ['a[title="Last Page →"]'])((err, result) => {
         if (err) console.log(err .red);
-        console.log('Result: ', result);
+        console.log('Result: ' .cyan, result);
         callback(result);
     })
 }
 
 function scrapePage(url, pageNum) {
-        x(url, ['.entry-title>a@href'])((err, result) => {
-            if (err) console.log(err.red);
+         x(url, ['.entry-title>a@href'])((err, result) => {
+            if (err) console.log(err);
             if (result) {
-                    result.forEach((url) => {
-                            download(url, pageNum)
+                    result.forEach( url => {
+                      download(url, pageNum)
 
                     })
                 }
@@ -48,17 +49,6 @@ function scrapePage(url, pageNum) {
 
     })
 }
-    /*x(url, ['.entry-title>a@href']).delay(1000)((err, result) => {
-        if (err) console.log(err .red);
-        if(result) {
-            result.forEach((url) => {
-
-                download(url, pageNum)
-
-            })
-        }
-        })
-        };*/
 
 function download(url, pageNum) {
     if (!fs.existsSync("books/")) {
@@ -69,27 +59,37 @@ function download(url, pageNum) {
     }
     x(url, '.download-links>a@href')((err, result) => {
 
-        if (err) console.log(err .red);
-        
+        if (err) console.log(err.code .red);
+        return new Promise((resolve, reject) => {
         http.get(result,(response) => {
-            if (response.statusCode === 200){
+            if (response.statusCode === 200) {
                 var file = fs.createWriteStream("books/" + category + "/" + url.split('/')[3] + ".pdf");
                 if (!fs.existsSync(file.path)) {
+                    if(pageNum !== undefined || pageNum !== 'undefined'){
+                        console.log('downloading '.blue, url.toString() .cyan, 'PAGENUM ' .red, pageNum.toString() .blue )
+                    }else{
+                        console.log('downloading '.blue, url.toString() .cyan)
+                    }
 
-                    console.log('downloading ' .blue + url .cyan, 'pageNum ' .red + pageNum);
                     response.pipe(file);
-                }else{
-                    console.log('File exists');
+                } else {
+                    console.log('File exists' .cyan);
                 }
+            }
 
-            } 
         }).on('error', function(err){
             console.log(err.code .red);
             if(err.code === 'ETIMEDOUT' || err.code === 'ECONNREFUSED'){
                 download(url, pageNum )
-                console.log('RETRY ' .red, url, 'PAGENUM ', pageNum)
+                if(pageNum !== undefined || pageNum !== 'undefined'){
+                    console.log('retrying '.magenta, url.toString() .cyan, 'PAGENUM ' .red, pageNum.toString() .blue )
+                }else{
+                    console.log('retrying '.magenta, url.toString() .cyan)
+                }
+
             }
 
         });
+        })
     });
 }
