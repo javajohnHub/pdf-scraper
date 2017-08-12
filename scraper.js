@@ -30,7 +30,7 @@ loopThroughPages(mainPage, function(result) {
 function loopThroughPages(url, callback) {
     x(url, ['a[title="Last Page →"]'])((err, result) => {
         if (err) console.log(err.red);
-        console.log('Result: '.cyan, result);
+        console.log('Result: '.cyan, result[0], ' pages');
         callback(result);
     })
 }
@@ -77,7 +77,7 @@ function download(url, pageNum) {
             if (err.code === 'ETIMEDOUT' || err.code === 'ECONNREFUSED') {
                 download(url, pageNum)
                 if (pageNum !== undefined || pageNum !== 'undefined') {
-                    console.log('retrying '.magenta, url, ' PAGENUM '.red, pageNum.toString().blue)
+                    console.log('retrying '.magenta, url, ' PAGENUM '.red, pageNum)
                 } else {
                     console.log('retrying '.magenta, url)
                 }
