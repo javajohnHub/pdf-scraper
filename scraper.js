@@ -64,9 +64,9 @@ function download(url, pageNum) {
                 var file = fs.createWriteStream("books/" + category + "/" + url.split('/')[3] + ".pdf");
                 if (!fs.existsSync(file.path)) {
                     if(pageNum !== undefined || pageNum !== 'undefined'){
-                        console.log('downloading '.blue, url.toString() .cyan, 'PAGENUM ' .red, pageNum.toString() .blue )
+                        console.log('downloading '.blue, url, ' PAGENUM ' .red, pageNum.toString() .blue )
                     }else{
-                        console.log('downloading '.blue, url.toString() .cyan)
+                        console.log('downloading '.blue, url)
                     }
 
                     response.pipe(file);
@@ -80,9 +80,9 @@ function download(url, pageNum) {
             if(err.code === 'ETIMEDOUT' || err.code === 'ECONNREFUSED'){
                 download(url, pageNum )
                 if(pageNum !== undefined || pageNum !== 'undefined'){
-                    console.log('retrying '.magenta, url.toString() .cyan, 'PAGENUM ' .red, pageNum.toString() .blue )
+                    console.log('retrying '.magenta, url, ' PAGENUM ' .red, pageNum.toString() .blue )
                 }else{
-                    console.log('retrying '.magenta, url.toString() .cyan)
+                    console.log('retrying '.magenta, url)
                 }
 
             }
