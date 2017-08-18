@@ -53,7 +53,10 @@ function scrapePage(url, pageNum) {
 }
 
 function download(index) {
-    // Download the book with this index in the scheduledDownloads array 
+    // Download the book with this index in the scheduledDownloads array
+    scheduledDownloads.sort(function (a, b) {
+        return a.pageNum - b.pageNum;
+    });
     if (index < scheduledDownloads.length) {
         var url = scheduledDownloads[index].url;
         var pageNum = scheduledDownloads[index].pageNum;
